@@ -39,11 +39,6 @@ robot_model::RobotModelPtr kinematic_model;
 robot_state::RobotStatePtr kinematic_state;
 robot_state::JointModelGroup* joint_model_group;
 
-
-// moveit::planning_interface::MoveGroupInterface *group = NULL;
-// moveit::planning_interface::PlanningSceneInterface *planning_scene_interface = NULL;
-
-
 double manipulability()
 {
   Eigen::Vector3d reference_point_position(0.0, 0.0, 0.0);
@@ -53,7 +48,6 @@ double manipulability()
                               reference_point_position, jacobian);
 
   // cout << "Jacobian: \n" << jacobian << "\n\n";
-
   // Eigen::MatrixXd jjt;
   // jjt= (jacobian*jacobian.transpose());
   // double w;
@@ -81,16 +75,12 @@ double manipulability()
 bool getIK(geometry_msgs::Pose eef_pose)
 {
   kinematic_state->enforceBounds();
-
   Eigen::Isometry3d pose_in;
   tf::poseMsgToEigen(eef_pose, pose_in);
-
   // cout << "Pose: " << eef_pose << "\n";
-  
   bool found_ik =kinematic_state->setFromIK(joint_model_group, pose_in, 10, 0.5);
 
   return found_ik;
-
 }
 
 geometry_msgs::Pose create_pose(double pos_x, double pos_y, double pos_z, double orient_x, double orient_y, double orient_z)
@@ -108,23 +98,17 @@ void reset_joint_values(){
 
     std::vector<double> joint_values;
     kinematic_state->copyJointGroupPositions(joint_model_group, joint_values);
-
     for(std::size_t i = 0; i < joint_values.size(); i++){
         joint_values[i] = 0;
     }
     kinematic_state->setJointGroupPositions(joint_model_group, joint_values);
-
 }
 
 //init function, shouldn't need to be modified, additional
 //initializations might be needed though
 void initialize()
 {
-
   ROS_INFO("instantiating Schunk arm");
-
-
-
   robot_model_loader::RobotModelLoader robot_model_loader("robot_description");
   kinematic_model = robot_model_loader.getModel();
 
@@ -132,25 +116,8 @@ void initialize()
 	kinematic_state->setToDefaultValues();
   kinematic_state->enforceBounds();
 
-  joint_model_group = kinematic_model->getJointModelGroup("arm");
+  joint_model_group = kinematic_model->getJointModelGroup("indy7");
   joint_model_group->getJointModelNames();
-  
-  moveit::planning_interface::MoveGroupInterface group("arm");
-  // moveit::planning_interface::PlanningSceneInterface *planning_scene_interface = NULL;
-
-
-  // group_.reset(new moveit::planning_interface::MoveGroup("Arm"));
-  // group_->setPlanningTime(5);
-
-  // got_robot_state = false;
-  // got_plan = false;
-
-  // display_publisher_ = node_handle.advertise<moveit_msgs::DisplayTrajectory>("/move_group/display_planned_path",1,true);
-  // planning_scene_diff_publisher = node_handle.advertise<moveit_msgs::PlanningScene>("planning_scene",1);
-
-  // robot_model_loader_ = robot_model_loader::RobotModelLoader("robot_description");
-  // robot_model_ = robot_model_loader_.getModel();
-  // planning_scene_.reset(new planning_scene::PlanningScene(robot_model_));
 
   reset_joint_values();
 
@@ -165,7 +132,7 @@ int main(int argc, char **argv)
   
     // For visualizing things in rviz
   rviz_visual_tools::RvizVisualToolsPtr visual_tools;
-  visual_tools.reset(new rviz_visual_tools::RvizVisualTools("base_link","/rviz_visual_tools"));
+  visual_tools.reset(new rviz_visual_tools::RvizVisualTools("ground","/visualization_marker_array"));
   visual_tools->loadMarkerPub();
 
   // Clear messages
@@ -173,14 +140,15 @@ int main(int argc, char **argv)
   visual_tools->enableBatchPublishing();
 
   initialize();
-  double step=0.03;
-  double sizex= 0.6, sizey=0.6;
+  
+  double step=0.05;
+  double sizex= 0.5, sizey=0.5;
   
   for (double i = -sizex; i < sizex; i=i+step)
   {
     for (double j = -sizey; j < sizey; j=j+step)
     {
-      for (double k = 0.1; k < 0.755; k=k+step)
+      for (double k = 0.3; k < 1.4; k=k+step)
       {
         geometry_msgs::Pose pose;
         pose = create_pose(i,j,k,0,0,0);
@@ -199,7 +167,7 @@ int main(int argc, char **argv)
             // cout << iiwa_joint_names[i] << " = " << iiwa_joint_values[i] << "\n";
           }
 
-          const Eigen::Affine3d &eef_state = kinematic_state->getGlobalLinkTransform("6_link");
+          const Eigen::Affine3d &eef_state = kinematic_state->getGlobalLinkTransform("link6");
           geometry_msgs::Pose eef_pose;
           tf::poseEigenToMsg(eef_state, eef_pose);
           // cout << eef_pose << "\n";
@@ -227,10 +195,7 @@ int main(int argc, char **argv)
 
   }
   
-    
-
   // ros::spin();
   ros::shutdown();  
-
  return 0;
 }

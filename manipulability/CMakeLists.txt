@@ -12,12 +12,9 @@ find_package(catkin REQUIRED COMPONENTS
   rospy
   std_msgs
 
-
   eigen_conversions
   moveit_ros_planning_interface
   rviz_visual_tools
-   
-
 )
 
 ## System dependencies are found with CMake's conventions
@@ -144,6 +141,8 @@ add_executable(skku_robot_manipulability src/manipulability_skku.cpp)
 add_executable(robotcare_robot_manipulability src/manipulability_robotcare.cpp)
 add_executable(social_robot_manipulability src/hand_off_pose.cpp)
 add_executable(objects src/object.cpp)
+add_executable(manipulability_indy7 src/manipulability_indy7.cpp)
+
 # add_executable(fran src/color.cpp)
 ## Rename C++ executable without prefix
 ## The above recommended prefix causes long target names, the following renames the
@@ -171,6 +170,10 @@ target_link_libraries(social_robot_manipulability
 target_link_libraries(objects
    ${catkin_LIBRARIES}
 )
+target_link_libraries(manipulability_indy7
+   ${catkin_LIBRARIES}
+)
+
 # target_link_libraries(fran
 #    ${catkin_LIBRARIES}
 # )
