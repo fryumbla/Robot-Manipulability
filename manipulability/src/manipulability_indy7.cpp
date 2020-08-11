@@ -140,7 +140,7 @@ int main(int argc, char **argv)
   visual_tools->enableBatchPublishing();
 
   initialize();
-  
+
   double step=0.05;
   double sizex= 0.5, sizey=0.5;
   
@@ -167,7 +167,7 @@ int main(int argc, char **argv)
             // cout << iiwa_joint_names[i] << " = " << iiwa_joint_values[i] << "\n";
           }
 
-          const Eigen::Affine3d &eef_state = kinematic_state->getGlobalLinkTransform("link6");
+          const Eigen::Affine3d &eef_state = kinematic_state->getGlobalLinkTransform("tcp");
           geometry_msgs::Pose eef_pose;
           tf::poseEigenToMsg(eef_state, eef_pose);
           // cout << eef_pose << "\n";
