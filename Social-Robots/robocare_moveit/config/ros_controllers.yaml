@@ -1,0 +1,66 @@
+# Simulation settings for using moveit_sim_controllers
+moveit_sim_hw_interface:
+  joint_model_group: right_arm
+  joint_model_group_pose: init_pose
+# Settings for ros_control_boilerplate control loop
+generic_hw_control_loop:
+  loop_hz: 300
+  cycle_time_error_threshold: 0.01
+# Settings for ros_control hardware interface
+hardware_interface:
+  joints:
+    - Waist_Roll
+    - Waist_Pitch
+    - Head_Yaw
+    - Head_Pitch
+    - LShoulder_Pitch
+    - LShoulder_Roll
+    - LElbow_Pitch
+    - LElbow_Yaw
+    - LWrist_Pitch
+    - LWrist_Roll
+    - LFinger_1
+    - LFinger_2
+    - LFinger_3
+    - RShoulder_Pitch
+    - RShoulder_Roll
+    - RElbow_Pitch
+    - RElbow_Yaw
+    - RWrist_Pitch
+    - RWrist_Roll
+    - RFinger_1
+    - RFinger_2
+    - RFinger_3
+    - active_joint_1
+    - active_joint_2
+    - active_joint_3
+    - active_joint_4
+  sim_control_mode: 1  # 0: position, 1: velocity
+# Publish all joint states
+# Creates the /joint_states topic necessary in ROS
+joint_state_controller:
+  type: joint_state_controller/JointStateController
+  publish_rate: 50
+controller_list:
+  - name: right_arm_controller
+    action_ns: follow_joint_trajectory
+    default: True
+    type: FollowJointTrajectory
+    joints:
+      - RShoulder_Pitch
+      - RShoulder_Roll
+      - RElbow_Pitch
+      - RElbow_Yaw
+      - RWrist_Pitch
+      - RWrist_Roll
+  - name: left_arm_controller
+    action_ns: follow_joint_trajectory
+    default: True
+    type: FollowJointTrajectory
+    joints:
+      - LShoulder_Pitch
+      - LShoulder_Roll
+      - LElbow_Pitch
+      - LElbow_Yaw
+      - LWrist_Pitch
+      - LWrist_Roll

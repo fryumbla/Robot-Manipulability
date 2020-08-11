@@ -1,0 +1,52 @@
+controller_list:
+  - name: fake_right_arm_controller
+    joints:
+      - RShoulder_Pitch
+      - RShoulder_Roll
+      - RElbow_Pitch
+      - RElbow_Yaw
+      - RWrist_Pitch
+      - RWrist_Roll
+  - name: fake_left_arm_controller
+    joints:
+      - LShoulder_Pitch
+      - LShoulder_Roll
+      - LElbow_Pitch
+      - LElbow_Yaw
+      - LWrist_Pitch
+      - LWrist_Roll
+  - name: fake_left_eef_controller
+    joints:
+      - LFinger_1
+      - LFinger_2
+      - LFinger_3
+  - name: fake_right_eef_controller
+    joints:
+      - RFinger_1
+      - RFinger_2
+      - RFinger_3
+  - name: fake_dual_arm_controller
+    joints:
+      - LShoulder_Pitch
+      - LShoulder_Roll
+      - LElbow_Pitch
+      - LElbow_Yaw
+      - LWrist_Pitch
+      - LWrist_Roll
+      - RShoulder_Pitch
+      - RShoulder_Roll
+      - RElbow_Pitch
+      - RElbow_Yaw
+      - RWrist_Pitch
+      - RWrist_Roll
+initial:  # Define initial robot poses.
+  - group: right_arm
+    pose: init_pose
+  - group: left_arm
+    pose: init_pose
+  - group: left_eef
+    pose: open_left_hand
+  - group: right_eef
+    pose: open_right_hand
+  - group: dual_arm
+    pose: init_pose

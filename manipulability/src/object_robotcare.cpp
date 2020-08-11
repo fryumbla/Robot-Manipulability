@@ -15,7 +15,7 @@ int main(int argc, char **argv)
     
     ros::Rate loop_rate(10);
 
-    const std::string PLANNING_GROUP = "right_arm";
+    const std::string PLANNING_GROUP = "left_arm";
     moveit::planning_interface::MoveGroupInterface move_group(PLANNING_GROUP);
 
     moveit::planning_interface::PlanningSceneInterface planning_scene_interface;
@@ -26,19 +26,19 @@ int main(int argc, char **argv)
 
     // Table
     collision_objects[0].id = "obj_table";
-    collision_objects[0].header.frame_id = "base_footprint";
+    collision_objects[0].header.frame_id = "base_link";
     /* Define the primitive and its dimensions. */
     collision_objects[0].primitives.resize(1);
     collision_objects[0].primitives[0].type = collision_objects[0].primitives[0].BOX;
     collision_objects[0].primitives[0].dimensions.resize(3);
-    collision_objects[0].primitives[0].dimensions[0] = 0.70; //dimension x
-    collision_objects[0].primitives[0].dimensions[1] = 1.14;
-    collision_objects[0].primitives[0].dimensions[2] = 0.70; //dimension z
+    collision_objects[0].primitives[0].dimensions[0] = 0.750000059605;
+    collision_objects[0].primitives[0].dimensions[1] = 1.20000016689;
+    collision_objects[0].primitives[0].dimensions[2] = 0.730000257492;
     /* Define the pose of the table. */
     collision_objects[0].primitive_poses.resize(1);
-    collision_objects[0].primitive_poses[0].position.x = 0.65;
-    collision_objects[0].primitive_poses[0].position.y = 0;
-    collision_objects[0].primitive_poses[0].position.z = 0.35;
+    collision_objects[0].primitive_poses[0].position.x = 0.57500565052;
+    collision_objects[0].primitive_poses[0].position.y = 0.0250088647008;
+    collision_objects[0].primitive_poses[0].position.z = 0.36501121521;
     collision_objects[0].primitive_poses[0].orientation.x = 0;
     collision_objects[0].primitive_poses[0].orientation.y = 0;
     collision_objects[0].primitive_poses[0].orientation.z = 0;
@@ -48,19 +48,19 @@ int main(int argc, char **argv)
 
     // Juice
     collision_objects[1].id = "obj_juice";
-    collision_objects[1].header.frame_id = "base_footprint";
+    collision_objects[1].header.frame_id = "base_link";
     /* Define the primitive and its dimensions. */
     collision_objects[1].primitives.resize(1);
     collision_objects[1].primitives[0].type = collision_objects[0].primitives[0].CYLINDER;
     collision_objects[1].primitives[0].dimensions.resize(2);
-    collision_objects[1].primitives[0].dimensions[0] = 0.15;
+    collision_objects[1].primitives[0].dimensions[0] = 0.143729999661;
     collision_objects[1].primitives[0].dimensions[1] = 0.0250000055134;
     // collision_objects[1].primitives[0].dimensions[2] = 0.143729999661;
     /* Define the pose of the table. */
     collision_objects[1].primitive_poses.resize(1);
-    collision_objects[1].primitive_poses[0].position.x = 0.6;
-    collision_objects[1].primitive_poses[0].position.y = -0.3;
-    collision_objects[1].primitive_poses[0].position.z = 0.775;
+    collision_objects[1].primitive_poses[0].position.x = 0.290748232603;
+    collision_objects[1].primitive_poses[0].position.y = -0.1;
+    collision_objects[1].primitive_poses[0].position.z = 0.801787078381;
 
     collision_objects[1].operation = collision_objects[1].ADD;
 
@@ -68,7 +68,7 @@ int main(int argc, char **argv)
 
     // ball
     collision_objects[2].id = "obj_ball";
-    collision_objects[2].header.frame_id = "base_footprint";
+    collision_objects[2].header.frame_id = "base_link";
     /* Define the primitive and its dimensions. */
     collision_objects[2].primitives.resize(1);
     collision_objects[2].primitives[0].type = collision_objects[0].primitives[0].SPHERE;
@@ -78,26 +78,26 @@ int main(int argc, char **argv)
     /* Define the pose of the table. */
     collision_objects[2].primitive_poses.resize(1);
     collision_objects[2].primitive_poses[0].position.x = 0.4;
-    collision_objects[2].primitive_poses[0].position.y = 0;
-    collision_objects[2].primitive_poses[0].position.z = 0.73;
+    collision_objects[2].primitive_poses[0].position.y = -0.1;
+    collision_objects[2].primitive_poses[0].position.z = 0.755;
      collision_objects[2].operation = collision_objects[2].ADD;
 
 
          // Milk
     collision_objects[3].id = "obj_milk";
-    collision_objects[3].header.frame_id = "base_footprint";
+    collision_objects[3].header.frame_id = "base_link";
     /* Define the primitive and its dimensions. */
     collision_objects[3].primitives.resize(1);
     collision_objects[3].primitives[0].type = collision_objects[0].primitives[0].BOX;
     collision_objects[3].primitives[0].dimensions.resize(3);
     collision_objects[3].primitives[0].dimensions[0] = 0.0450000055134;
     collision_objects[3].primitives[0].dimensions[1] = 0.0450000055134;
-    collision_objects[3].primitives[0].dimensions[2] = 0.15;
+    collision_objects[3].primitives[0].dimensions[2] = 0.156530082226;
     /* Define the pose of the table. */
     collision_objects[3].primitive_poses.resize(1);
-    collision_objects[3].primitive_poses[0].position.x = 0.5;
-    collision_objects[3].primitive_poses[0].position.y = 0.3;
-    collision_objects[3].primitive_poses[0].position.z = 0.775;
+    collision_objects[3].primitive_poses[0].position.x = 0.438998311758;
+    collision_objects[3].primitive_poses[0].position.y = 0.29629996419;
+    collision_objects[3].primitive_poses[0].position.z = 0.808184683323;
     collision_objects[3].primitive_poses[0].orientation.x = 0;
     collision_objects[3].primitive_poses[0].orientation.y = 0;
     collision_objects[3].primitive_poses[0].orientation.z = 0;
@@ -107,7 +107,7 @@ int main(int argc, char **argv)
 
     // // Cone
     // collision_objects[4].id = "obj_cone";
-    // collision_objects[4].header.frame_id = "base_footprint";
+    // collision_objects[4].header.frame_id = "base_link";
     // /* Define the primitive and its dimensions. */
     // collision_objects[4].primitives.resize(1);
     // collision_objects[4].primitives[0].type = collision_objects[0].primitives[0].CONE;

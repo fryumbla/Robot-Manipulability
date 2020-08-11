@@ -1,0 +1,11 @@
+moveit_setup_assistant_config:
+  URDF:
+    package: social_robot_description
+    relative_path: urdf/social_robot.urdf
+    xacro_args: "--inorder "
+  SRDF:
+    relative_path: config/social_robot.srdf
+  CONFIG:
+    author_name: Hoyeon Hwang
+    author_email: gh_dus@naver.com
+    generated_timestamp: 1592722970

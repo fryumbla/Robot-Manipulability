@@ -1,0 +1,11 @@
+moveit_setup_assistant_config:
+  URDF:
+    package: skkurobot_description
+    relative_path: urdf/skkurobot.urdf.xacro
+    xacro_args: "--inorder "
+  SRDF:
+    relative_path: config/skkurobot.srdf
+  CONFIG:
+    author_name: jjm
+    author_email: nicky707@hanmail.net
+    generated_timestamp: 1592723104

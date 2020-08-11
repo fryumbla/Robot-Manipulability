@@ -1,0 +1,257 @@
+<?xml version="1.0" ?>
+<!--This does not replace URDF, and is not an extension of URDF.
+    This is a format for representing semantic information about the robot structure.
+    A URDF file must exist for this robot as well, where the joints and the links that are referenced are defined
+-->
+<robot name="social_robot">
+    <!--GROUPS: Representation of a set of joints and links. This can be useful for specifying DOF to plan for, defining arms, end effectors, etc-->
+    <!--LINKS: When a link is specified, the parent joint of that link (if it exists) is automatically included-->
+    <!--JOINTS: When a joint is specified, the child link of that joint (which will always exist) is automatically included-->
+    <!--CHAINS: When a chain is specified, all the links along the chain (including endpoints) are included in the group. Additionally, all the joints that are parents to included links are also included. This means that joints along the chain and the parent joint of the base link are included in the group-->
+    <!--SUBGROUPS: Groups can also be formed by referencing to already defined group names-->
+    <group name="right_arm">
+        <link name="RShoulder_Pitch" />
+        <link name="RShoulder_Roll" />
+        <link name="RElbow_Pitch" />
+        <link name="RElbow_Yaw" />
+        <link name="RWrist_Pitch" />
+        <link name="Rwrist_link" />
+        <joint name="RShoulder_Pitch" />
+        <joint name="RShoulder_Roll" />
+        <joint name="RElbow_Pitch" />
+        <joint name="RElbow_Yaw" />
+        <joint name="RWrist_Pitch" />
+        <joint name="RWrist_Roll" />
+        <joint name="RHand_base" />
+        <chain base_link="Waist_Pitch" tip_link="Rwrist_link" />
+    </group>
+    <group name="left_arm">
+        <link name="LShoulder_Pitch" />
+        <link name="LShoulder_Roll" />
+        <link name="LElbow_Pitch" />
+        <link name="LElbow_Yaw" />
+        <link name="LWrist_Pitch" />
+        <link name="Lwrist_link" />
+        <joint name="LShoulder_Pitch" />
+        <joint name="LShoulder_Roll" />
+        <joint name="LElbow_Pitch" />
+        <joint name="LElbow_Yaw" />
+        <joint name="LWrist_Pitch" />
+        <joint name="LWrist_Roll" />
+        <joint name="LHand_base" />
+        <chain base_link="Waist_Pitch" tip_link="Lwrist_link" />
+    </group>
+    <group name="left_eef">
+        <link name="LHand_base" />
+        <link name="LFinger_1" />
+        <link name="LFinger_1_2" />
+        <link name="LFinger_2" />
+        <link name="LFinger_2_2" />
+        <link name="LFinger_3" />
+        <link name="LFinger_3_2" />
+        <joint name="LFinger_1" />
+        <joint name="LFinger_1_2" />
+        <joint name="LFinger_2" />
+        <joint name="LFinger_2_2" />
+        <joint name="LFinger_3" />
+        <joint name="LFinger_3_2" />
+    </group>
+    <group name="right_eef">
+        <link name="RHand_base" />
+        <link name="RFinger_1" />
+        <link name="RFinger_1_2" />
+        <link name="RFinger_2" />
+        <link name="RFinger_2_2" />
+        <link name="RFinger_3" />
+        <link name="RFinger_3_2" />
+        <joint name="RFinger_1" />
+        <joint name="RFinger_1_2" />
+        <joint name="RFinger_2" />
+        <joint name="RFinger_2_2" />
+        <joint name="RFinger_3" />
+        <joint name="RFinger_3_2" />
+    </group>
+    <group name="dual_arm">
+        <group name="right_arm" />
+        <group name="left_arm" />
+    </group>
+    <!--GROUP STATES: Purpose: Define a named state for a particular group, in terms of joint values. This is useful to define states like 'folded arms'-->
+    <group_state name="init_pose" group="right_arm">
+        <joint name="RElbow_Pitch" value="0" />
+        <joint name="RElbow_Yaw" value="0" />
+        <joint name="RShoulder_Pitch" value="0" />
+        <joint name="RShoulder_Roll" value="1.5" />
+        <joint name="RWrist_Pitch" value="0" />
+        <joint name="RWrist_Roll" value="0" />
+    </group_state>
+    <group_state name="init_pose" group="left_arm">
+        <joint name="LElbow_Pitch" value="0" />
+        <joint name="LElbow_Yaw" value="0" />
+        <joint name="LShoulder_Pitch" value="0" />
+        <joint name="LShoulder_Roll" value="-1.5" />
+        <joint name="LWrist_Pitch" value="0" />
+        <joint name="LWrist_Roll" value="0" />
+    </group_state>
+    <group_state name="init_pose" group="dual_arm">
+        <joint name="LElbow_Pitch" value="0" />
+        <joint name="LElbow_Yaw" value="0" />
+        <joint name="LShoulder_Pitch" value="0" />
+        <joint name="LShoulder_Roll" value="-1.5" />
+        <joint name="LWrist_Pitch" value="0" />
+        <joint name="LWrist_Roll" value="0" />
+        <joint name="RElbow_Pitch" value="0" />
+        <joint name="RElbow_Yaw" value="0" />
+        <joint name="RShoulder_Pitch" value="0" />
+        <joint name="RShoulder_Roll" value="1.5" />
+        <joint name="RWrist_Pitch" value="0" />
+        <joint name="RWrist_Roll" value="0" />
+    </group_state>
+    <group_state name="zero_pose" group="dual_arm">
+        <joint name="LElbow_Pitch" value="0" />
+        <joint name="LElbow_Yaw" value="0" />
+        <joint name="LShoulder_Pitch" value="0" />
+        <joint name="LShoulder_Roll" value="0" />
+        <joint name="LWrist_Pitch" value="0" />
+        <joint name="LWrist_Roll" value="0" />
+        <joint name="RElbow_Pitch" value="0" />
+        <joint name="RElbow_Yaw" value="0" />
+        <joint name="RShoulder_Pitch" value="0" />
+        <joint name="RShoulder_Roll" value="0" />
+        <joint name="RWrist_Pitch" value="0" />
+        <joint name="RWrist_Roll" value="0" />
+    </group_state>
+    <group_state name="zero_pose" group="right_arm">
+        <joint name="RElbow_Pitch" value="0" />
+        <joint name="RElbow_Yaw" value="0" />
+        <joint name="RShoulder_Pitch" value="0" />
+        <joint name="RShoulder_Roll" value="0" />
+        <joint name="RWrist_Pitch" value="0" />
+        <joint name="RWrist_Roll" value="0" />
+    </group_state>
+    <group_state name="zero_pose" group="left_arm">
+        <joint name="LElbow_Pitch" value="0" />
+        <joint name="LElbow_Yaw" value="0" />
+        <joint name="LShoulder_Pitch" value="0" />
+        <joint name="LShoulder_Roll" value="0" />
+        <joint name="LWrist_Pitch" value="0" />
+        <joint name="LWrist_Roll" value="0" />
+    </group_state>
+    <group_state name="open_right_hand" group="right_eef">
+        <joint name="RFinger_1" value="-0.2796" />
+        <joint name="RFinger_1_2" value="0" />
+        <joint name="RFinger_2" value="-0.2796" />
+        <joint name="RFinger_2_2" value="0" />
+        <joint name="RFinger_3" value="0.3106" />
+        <joint name="RFinger_3_2" value="0" />
+    </group_state>
+    <group_state name="open_left_hand" group="left_eef">
+        <joint name="LFinger_1" value="-0.2796" />
+        <joint name="LFinger_1_2" value="0" />
+        <joint name="LFinger_2" value="-0.2796" />
+        <joint name="LFinger_2_2" value="0" />
+        <joint name="LFinger_3" value="-0.3106" />
+        <joint name="LFinger_3_2" value="0" />
+    </group_state>
+    <group_state name="close_right_hand" group="right_eef">
+        <joint name="RFinger_1" value="0" />
+        <joint name="RFinger_1_2" value="0" />
+        <joint name="RFinger_2" value="0" />
+        <joint name="RFinger_2_2" value="0" />
+        <joint name="RFinger_3" value="0" />
+        <joint name="RFinger_3_2" value="0" />
+    </group_state>
+    <group_state name="close_left_hand" group="left_eef">
+        <joint name="LFinger_1" value="0" />
+        <joint name="LFinger_1_2" value="0" />
+        <joint name="LFinger_2" value="0" />
+        <joint name="LFinger_2_2" value="0" />
+        <joint name="LFinger_3" value="0" />
+        <joint name="LFinger_3_2" value="0" />
+    </group_state>
+    <!--END EFFECTOR: Purpose: Represent information about an end effector.-->
+    <end_effector name="left_eef" parent_link="Lwrist_link" group="left_eef" parent_group="left_arm" />
+    <end_effector name="right_eef" parent_link="Rwrist_link" group="right_eef" parent_group="right_arm" />
+    <!--VIRTUAL JOINT: Purpose: this element defines a virtual joint between a robot link and an external frame of reference (considered fixed with respect to the robot)-->
+    <virtual_joint name="virtual_joint" type="fixed" parent_frame="map" child_link="base_footprint" />
+    <!--PASSIVE JOINT: Purpose: this element is used to mark joints that are not actuated-->
+    <passive_joint name="LFinger_1_2" />
+    <passive_joint name="LFinger_2_2" />
+    <passive_joint name="LFinger_3_2" />
+    <passive_joint name="RFinger_1_2" />
+    <passive_joint name="RFinger_2_2" />
+    <passive_joint name="RFinger_3_2" />
+    <!--DISABLE COLLISIONS: By default it is assumed that any link of the robot could potentially come into collision with any other link in the robot. This tag disables collision checking between a specified pair of links. -->
+    <disable_collisions link1="Head_Pitch" link2="Head_Yaw" reason="Adjacent" />
+    <disable_collisions link1="Head_Pitch" link2="LShoulder_Pitch" reason="Never" />
+    <disable_collisions link1="Head_Pitch" link2="RShoulder_Pitch" reason="Never" />
+    <disable_collisions link1="Head_Pitch" link2="Waist_Pitch" reason="Never" />
+    <disable_collisions link1="Head_Pitch" link2="Waist_Roll" reason="Never" />
+    <disable_collisions link1="Head_Pitch" link2="base_link" reason="Never" />
+    <disable_collisions link1="Head_Yaw" link2="LShoulder_Pitch" reason="Never" />
+    <disable_collisions link1="Head_Yaw" link2="RShoulder_Pitch" reason="Never" />
+    <disable_collisions link1="Head_Yaw" link2="Waist_Pitch" reason="Adjacent" />
+    <disable_collisions link1="Head_Yaw" link2="Waist_Roll" reason="Never" />
+    <disable_collisions link1="Head_Yaw" link2="base_link" reason="Never" />
+    <disable_collisions link1="LElbow_Pitch" link2="LElbow_Yaw" reason="Adjacent" />
+    <disable_collisions link1="LElbow_Pitch" link2="LShoulder_Pitch" reason="Never" />
+    <disable_collisions link1="LElbow_Pitch" link2="LShoulder_Roll" reason="Adjacent" />
+    <disable_collisions link1="LElbow_Pitch" link2="LWrist_Pitch" reason="Never" />
+    <disable_collisions link1="LElbow_Pitch" link2="RShoulder_Pitch" reason="Never" />
+    <disable_collisions link1="LElbow_Pitch" link2="Waist_Roll" reason="Never" />
+    <disable_collisions link1="LElbow_Pitch" link2="base_link" reason="Never" />
+    <disable_collisions link1="LElbow_Yaw" link2="LWrist_Pitch" reason="Adjacent" />
+    <disable_collisions link1="LFinger_1" link2="LFinger_1_2" reason="Adjacent" />
+    <disable_collisions link1="LFinger_1" link2="LFinger_2" reason="Never" />
+    <disable_collisions link1="LFinger_1" link2="LFinger_2_2" reason="Never" />
+    <disable_collisions link1="LFinger_1" link2="LHand_base" reason="Adjacent" />
+    <disable_collisions link1="LFinger_1_2" link2="LFinger_2" reason="Never" />
+    <disable_collisions link1="LFinger_1_2" link2="LFinger_2_2" reason="Never" />
+    <disable_collisions link1="LFinger_2" link2="LFinger_2_2" reason="Adjacent" />
+    <disable_collisions link1="LFinger_2" link2="LFinger_3_2" reason="Never" />
+    <disable_collisions link1="LFinger_2" link2="LHand_base" reason="Adjacent" />
+    <disable_collisions link1="LFinger_2_2" link2="LFinger_3_2" reason="Never" />
+    <disable_collisions link1="LFinger_2_2" link2="RFinger_2_2" reason="Never" />
+    <disable_collisions link1="LFinger_3" link2="LFinger_3_2" reason="Adjacent" />
+    <disable_collisions link1="LFinger_3" link2="LHand_base" reason="Adjacent" />
+    <disable_collisions link1="LHand_base" link2="LWrist_Pitch" reason="Adjacent" />
+    <disable_collisions link1="LShoulder_Pitch" link2="LShoulder_Roll" reason="Adjacent" />
+    <disable_collisions link1="LShoulder_Pitch" link2="RElbow_Pitch" reason="Never" />
+    <disable_collisions link1="LShoulder_Pitch" link2="RShoulder_Pitch" reason="Never" />
+    <disable_collisions link1="LShoulder_Pitch" link2="RShoulder_Roll" reason="Never" />
+    <disable_collisions link1="LShoulder_Pitch" link2="Waist_Pitch" reason="Adjacent" />
+    <disable_collisions link1="LShoulder_Pitch" link2="Waist_Roll" reason="Never" />
+    <disable_collisions link1="LShoulder_Pitch" link2="base_link" reason="Never" />
+    <disable_collisions link1="LShoulder_Roll" link2="RShoulder_Pitch" reason="Never" />
+    <disable_collisions link1="LShoulder_Roll" link2="RShoulder_Roll" reason="Never" />
+    <disable_collisions link1="LShoulder_Roll" link2="Waist_Roll" reason="Never" />
+    <disable_collisions link1="LShoulder_Roll" link2="base_link" reason="Never" />
+    <disable_collisions link1="RElbow_Pitch" link2="RElbow_Yaw" reason="Adjacent" />
+    <disable_collisions link1="RElbow_Pitch" link2="RShoulder_Pitch" reason="Never" />
+    <disable_collisions link1="RElbow_Pitch" link2="RShoulder_Roll" reason="Adjacent" />
+    <disable_collisions link1="RElbow_Pitch" link2="RWrist_Pitch" reason="Never" />
+    <disable_collisions link1="RElbow_Pitch" link2="Waist_Roll" reason="Never" />
+    <disable_collisions link1="RElbow_Pitch" link2="base_link" reason="Never" />
+    <disable_collisions link1="RElbow_Yaw" link2="RWrist_Pitch" reason="Adjacent" />
+    <disable_collisions link1="RFinger_1" link2="RFinger_1_2" reason="Adjacent" />
+    <disable_collisions link1="RFinger_1" link2="RFinger_2" reason="Never" />
+    <disable_collisions link1="RFinger_1" link2="RFinger_2_2" reason="Never" />
+    <disable_collisions link1="RFinger_1" link2="RHand_base" reason="Adjacent" />
+    <disable_collisions link1="RFinger_1_2" link2="RFinger_2" reason="Never" />
+    <disable_collisions link1="RFinger_1_2" link2="RFinger_2_2" reason="Never" />
+    <disable_collisions link1="RFinger_2" link2="RFinger_2_2" reason="Adjacent" />
+    <disable_collisions link1="RFinger_2" link2="RFinger_3_2" reason="Never" />
+    <disable_collisions link1="RFinger_2" link2="RHand_base" reason="Adjacent" />
+    <disable_collisions link1="RFinger_2_2" link2="RFinger_3_2" reason="Never" />
+    <disable_collisions link1="RFinger_3" link2="RFinger_3_2" reason="Adjacent" />
+    <disable_collisions link1="RFinger_3" link2="RHand_base" reason="Adjacent" />
+    <disable_collisions link1="RHand_base" link2="RWrist_Pitch" reason="Adjacent" />
+    <disable_collisions link1="RShoulder_Pitch" link2="RShoulder_Roll" reason="Adjacent" />
+    <disable_collisions link1="RShoulder_Pitch" link2="Waist_Pitch" reason="Adjacent" />
+    <disable_collisions link1="RShoulder_Pitch" link2="Waist_Roll" reason="Never" />
+    <disable_collisions link1="RShoulder_Pitch" link2="base_link" reason="Never" />
+    <disable_collisions link1="RShoulder_Roll" link2="Waist_Roll" reason="Never" />
+    <disable_collisions link1="RShoulder_Roll" link2="base_link" reason="Never" />
+    <disable_collisions link1="Waist_Pitch" link2="Waist_Roll" reason="Adjacent" />
+    <disable_collisions link1="Waist_Pitch" link2="base_link" reason="Never" />
+    <disable_collisions link1="Waist_Roll" link2="base_link" reason="Adjacent" />
+</robot>

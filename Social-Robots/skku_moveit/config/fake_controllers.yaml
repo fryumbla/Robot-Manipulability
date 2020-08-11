@@ -1,0 +1,39 @@
+controller_list:
+  - name: fake_left_arm_controller
+    joints:
+      - j1_joint
+      - j2_joint
+      - j3_joint
+      - j4_joint
+      - j5_joint
+      - j6_joint
+      - j7_joint
+  - name: fake_right_arm_controller
+    joints:
+      - joint1
+      - joint2
+      - joint3
+      - joint4
+      - joint5
+      - joint6
+  - name: fake_left_eef_controller
+    joints:
+      - left_bh_j11_joint
+      - left_bh_j12_joint
+      - left_bh_j22_joint
+      - left_bh_j32_joint
+  - name: fake_right_eef_controller
+    joints:
+      - right_bh_j11_joint
+      - right_bh_j12_joint
+      - right_bh_j22_joint
+      - right_bh_j32_joint
+initial:  # Define initial robot poses.
+  - group: left_arm
+    pose: left_arm_zero
+  - group: right_arm
+    pose: right_arm_zero
+  - group: left_eef
+    pose: left_eef_open
+  - group: right_eef
+    pose: right_eef_open

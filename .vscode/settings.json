@@ -70,5 +70,6 @@
         "set": "cpp",
         "string": "cpp",
         "string_view": "cpp"
-    }
+    },
+    "python.analysis.cacheFolderPath": "/usr/bin/python"
 }
