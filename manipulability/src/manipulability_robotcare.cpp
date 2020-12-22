@@ -1,5 +1,6 @@
 #include "ros/ros.h"
 #include <iostream> 
+#include <fstream>
 
 // estas librerias es para los objetos moveit_msgs::CollisionObject t de moveit
 #include "moveit/move_group_interface/move_group_interface.h"
@@ -16,6 +17,8 @@
 
 
 #include <geometry_msgs/Point.h>
+#include <sensor_msgs/JointState.h>
+#include "manipulability_msgs/manipulability.h"
 
 #include <eigen_conversions/eigen_msg.h>
 #include <moveit/robot_model_loader/robot_model_loader.h>
@@ -76,25 +79,25 @@ double manipulability_left()
 
   // cout << "Jacobian: \n" << jacobian << "\n\n";
 
-  // Eigen::MatrixXd jjt;
-  // jjt= (jacobian*jacobian.transpose());
-  // double w;
-  // w= sqrt(jjt.determinant());
-  // cout << "w: " << w << "\n\n";
+  Eigen::MatrixXd jjt;
+  jjt= (jacobian*jacobian.transpose());
+  double w;
+  w= sqrt(jjt.determinant());
+  cout << "w: " << w << "\n\n";
 
   double manipulability_index, manipulability;
 
-  kinematics_metrics::KinematicsMetricsPtr kinematics_metrics_;
-  kinematics_metrics_.reset(new kinematics_metrics::KinematicsMetrics(kinematic_model));
+  // kinematics_metrics::KinematicsMetricsPtr kinematics_metrics_;
+  // kinematics_metrics_.reset(new kinematics_metrics::KinematicsMetrics(kinematic_model));
 
-  // Eigen::MatrixXcd eigen_values,eigen_vectors;
+  // // Eigen::MatrixXcd eigen_values,eigen_vectors;
   
-  robot_state::RobotState *state = kinematic_state.get();
-  kinematics_metrics_->getManipulability(*state, group_left, manipulability);
-  kinematics_metrics_->getManipulabilityIndex(*state, group_left, manipulability_index);  
+  // robot_state::RobotState *state = kinematic_state.get();
+  // kinematics_metrics_->getManipulability(*state, group_left, manipulability);
+  // kinematics_metrics_->getManipulabilityIndex(*state, group_left, manipulability_index);  
   // kinematics_metrics_->getManipulabilityEllipsoid(*state, group_right, eigen_values,eigen_vectors);
 
-  return manipulability;
+  return w;
 }
 
 
@@ -186,6 +189,15 @@ int main(int argc, char **argv)
     ros::init(argc, argv, "manipulability_skku_robot");
 	ros::NodeHandle n;
 	node_handle = &n;
+  ros::Publisher robot_state_pub;
+  robot_state_pub   = n.advertise<manipulability_msgs::manipulability>("/manipulability_data",1);
+
+  manipulability_msgs::manipulability manipulability;
+  
+  manipulability.header.frame_id="Manipulability_data";
+
+  sensor_msgs::JointState joint_values_right;
+  sensor_msgs::JointState joint_values_left;
   
     // For visualizing things in rviz
   rviz_visual_tools::RvizVisualToolsPtr visual_tools;
@@ -199,110 +211,157 @@ int main(int argc, char **argv)
 
   initialize();
 
+  std::ofstream myFile("manipulability.csv");
+
     geometry_msgs::Pose pose_right, pose_left;  
 
-    double step=0.05;
-    double sizex= 0.5, sizey=0.55;
+    double step=0.03;
+    // double sizex= 0.5, sizey=0.55;
+    double sizex= 0.4, sizey=0.30;
     
-    for (double i = 0.05; i < sizex; i=i+step)
+    for (double i = 0.1; i <= sizex; i=i+step)
     {
-        for (double j = -sizey; j < sizey; j=j+step)
+      cout << "x:" << i << "\n";
+        for (double j = -0.5; j <= 0.2; j=j+step)
         {
-            for (double k = 0.7; k < 0.9; k=k+step)
-            {
-                geometry_msgs::Pose pose;
+          cout << "y:" << j << "\n";
+            // for (double k = 0.7; k <= 0.95; k=k+step)
+            // {
 
-                pose_right = create_pose(i,j,k,-3.1416,-1.57,0);
-                pose_left = create_pose(i,j,k,0,1.57,0);
+              for (double m = 0.0; m <= 1.57; m=m+0.1745329252)
+              { 
+                manipulability.header.stamp=ros::Time::now();
+              
+                geometry_msgs::Pose pose;
+                pose_right = create_pose(i,j,0.8,-3.1416+m,-1.57,0);
+                pose_left = create_pose(i,j,0.8,m,1.57,0);
+                                // left  x angel 0 to 1.57
+
 
                 if (getIK_right(pose_right))
                 {
-                // Retrieve joint values map
-                std::map<std::string, double> goal_joint_values;
-                std::vector<double> iiwa_joint_values;
-                kinematic_state->copyJointGroupPositions(group_right, iiwa_joint_values);
-                const std::vector<std::string> &iiwa_joint_names = group_right->getJointModelNames();
-                for(std::size_t i = 0; i < iiwa_joint_names.size(); ++i) 
-                { // TODO cleanly remove the fixed joints (first and last) from the list
-                    goal_joint_values[iiwa_joint_names[i]] = iiwa_joint_values[i];
-                    // cout << iiwa_joint_names[i] << " = " << iiwa_joint_values[i] << "\n";
-                }
+                    manipulability.pose = pose_right;
+                  // Retrieve joint values map
+                  myFile << i << "," << j << "," << "0.8" << "," << m << "," ;
+                  std::map<std::string, double> goal_joint_values;
+                  std::vector<double> iiwa_joint_values;
+                  kinematic_state->copyJointGroupPositions(group_right, iiwa_joint_values);
+                  const std::vector<std::string> &iiwa_joint_names = group_right->getJointModelNames();
+                  for(std::size_t i = 0; i < iiwa_joint_names.size(); ++i) 
+                  { // TODO cleanly remove the fixed joints (first and last) from the list
+                      
+                      goal_joint_values[iiwa_joint_names[i]] = iiwa_joint_values[i];
+                      myFile << iiwa_joint_values[i] << "," ;
+                      // cout << iiwa_joint_names[i] << " = " << iiwa_joint_values[i] << "\n";
+                  }
+                  
+                  joint_values_right.header.stamp=ros::Time::now();
+                  joint_values_right.header.frame_id="right_arm";
+                  joint_values_right.name = group_right->getJointModelNames();
+                  joint_values_right.position=iiwa_joint_values;
 
-                const Eigen::Affine3d &eef_state = kinematic_state->getGlobalLinkTransform("right_end_effect_point");
-                geometry_msgs::Pose eef_pose, eef_final;
-                tf::poseEigenToMsg(eef_state, eef_pose);
-                tf::poseEigenToMsg(eef_state, eef_final);
-                cout << eef_final.orientation << "\n";
-                eef_final.orientation.x=-eef_final.orientation.x;
-                eef_final.orientation.y=-eef_final.orientation.y;
-                eef_final.orientation.z=-eef_final.orientation.z;
-                eef_final.orientation.w=-eef_final.orientation.w;
 
-                // cout << eef_pose << "\n";
 
-                double w= manipulability_right();
-                cout << w << "\n";
+                  const Eigen::Affine3d &eef_state = kinematic_state->getGlobalLinkTransform("right_end_effect_point");
+                  geometry_msgs::Pose eef_pose, eef_final;
+                  tf::poseEigenToMsg(eef_state, eef_pose);
+                  tf::poseEigenToMsg(eef_state, eef_final);
+                  // cout << eef_final.orientation << "\n";
+                  eef_final.orientation.x=-eef_final.orientation.x;
+                  eef_final.orientation.y=-eef_final.orientation.y;
+                  eef_final.orientation.z=-eef_final.orientation.z;
+                  eef_final.orientation.w=-eef_final.orientation.w;
 
-                // drawing points
-                geometry_msgs::Vector3 scale = visual_tools->getScale(rviz_visual_tools::SMALL);
-                std_msgs::ColorRGBA color = visual_tools->getColorScale(w*10);
-                visual_tools->publishSphere(visual_tools->convertPose(eef_pose), color, scale, "Sphere");
-                // visual_tools->publishZArrow(visual_tools->convertPose(eef_final), rviz_visual_tools::ORANGE, rviz_visual_tools::XXXXSMALL);
-                // visual_tools->publishLine(visual_tools->convertPose(eef_pose), visual_tools->convertPose(eef_final), rviz_visual_tools::RAND);
-                visual_tools->publishAxis(visual_tools->convertPose(eef_pose), rviz_visual_tools::XXXXSMALL);
-                visual_tools->trigger();
-                
+                  // cout << eef_pose << "\n";
+
+                  manipulability.joint_values= joint_values_right;
+                  double w= manipulability_right();
+                  cout << "right manipulability:" << w << "\n";
+                  manipulability.manipulability = w;
+                  // drawing points
+                  geometry_msgs::Vector3 scale = visual_tools->getScale(rviz_visual_tools::SMALL);
+                  std_msgs::ColorRGBA color = visual_tools->getColorScale(w*10);
+                  visual_tools->publishSphere(visual_tools->convertPose(pose_right), color, scale, "Sphere");
+                  // visual_tools->publishZArrow(visual_tools->convertPose(eef_final), rviz_visual_tools::ORANGE, rviz_visual_tools::XXXXSMALL);
+                  // visual_tools->publishLine(visual_tools->convertPose(eef_pose), visual_tools->convertPose(eef_final), rviz_visual_tools::RAND);
+                  visual_tools->publishAxis(visual_tools->convertPose(pose_right), rviz_visual_tools::XXXXSMALL);
+                  visual_tools->trigger();
+                  robot_state_pub.publish(manipulability);
+
+
+                  // myFile << i << "," << j << "," << "0.8" << "," << m << "," << w << "\n";
+                  myFile << w << "\n";
+
+
+
+
+
+
                 }else
                 {
                 cout << "No found right IK\n";
                 }
 
-                if (getIK_left(pose_left))
-                {
-                // Retrieve joint values map
-                std::map<std::string, double> goal_joint_values;
-                std::vector<double> iiwa_joint_values;
-                kinematic_state->copyJointGroupPositions(group_left, iiwa_joint_values);
-                const std::vector<std::string> &iiwa_joint_names = group_left->getJointModelNames();
-                for(std::size_t i = 0; i < iiwa_joint_names.size(); ++i) 
-                { // TODO cleanly remove the fixed joints (first and last) from the list
-                    goal_joint_values[iiwa_joint_names[i]] = iiwa_joint_values[i];
-                    // cout << iiwa_joint_names[i] << " = " << iiwa_joint_values[i] << "\n";
-                }
+                // if (getIK_left(pose_left))
+                // {
+                //   manipulability.pose = pose_left;
+                // // Retrieve joint values map
+                // std::map<std::string, double> goal_joint_values;
+                // std::vector<double> iiwa_joint_values;
+                // kinematic_state->copyJointGroupPositions(group_left, iiwa_joint_values);
+                // const std::vector<std::string> &iiwa_joint_names = group_left->getJointModelNames();
+                // for(std::size_t i = 0; i < iiwa_joint_names.size(); ++i) 
+                // { // TODO cleanly remove the fixed joints (first and last) from the list
+                //     goal_joint_values[iiwa_joint_names[i]] = iiwa_joint_values[i];
+                //     // cout << iiwa_joint_names[i] << " = " << iiwa_joint_values[i] << "\n";
+                // }
 
-                const Eigen::Affine3d &eef_state = kinematic_state->getGlobalLinkTransform("left_end_effect_point");
-                geometry_msgs::Pose eef_pose, eef_final;
-                tf::poseEigenToMsg(eef_state, eef_pose);
-                tf::poseEigenToMsg(eef_state, eef_final);
-                eef_final.position.x=eef_final.position.x+0.05;
-                eef_final.position.y=eef_final.position.y+0.05;
-                eef_final.position.z=eef_final.position.z+0.05;
-                // cout << eef_pose << "\n";
-
-                double w= manipulability_left();
-                cout << w << "\n";
-
-                // drawing points
-                geometry_msgs::Vector3 scale = visual_tools->getScale(rviz_visual_tools::SMALL);
-                std_msgs::ColorRGBA color = visual_tools->getColorScale(w*10);
-                visual_tools->publishSphere(visual_tools->convertPose(eef_pose), color, scale, "Sphere");
-                // visual_tools->publishArrow(visual_tools->convertPose(eef_pose),visual_tools->convertPose(eef_final), color, scale);
-                visual_tools->publishAxis(visual_tools->convertPose(eef_pose), rviz_visual_tools::XXXXSMALL);
+                // joint_values_left.header.stamp=ros::Time::now();
+                // joint_values_left.header.frame_id="left_arm";
+                // joint_values_left.name = group_left->getJointModelNames();
+                // joint_values_left.position=iiwa_joint_values;
                 
-                visual_tools->trigger();
+                // const Eigen::Affine3d &eef_state = kinematic_state->getGlobalLinkTransform("left_end_effect_point");
+                // geometry_msgs::Pose eef_pose, eef_final;
+                // tf::poseEigenToMsg(eef_state, eef_pose);
+                // tf::poseEigenToMsg(eef_state, eef_final);
+                // eef_final.position.x=eef_final.position.x+0.05;
+                // eef_final.position.y=eef_final.position.y+0.05;
+                // eef_final.position.z=eef_final.position.z+0.05;
+                // // cout << eef_pose << "\n";
                 
-                }else
-                {
-                cout << "No found left IK\n";
-                }
 
-            }
+                // manipulability.joint_values= joint_values_left;
+
+                // double w= manipulability_left();
+                // cout << "left manipulability: " << w << "\n";
+                // manipulability.manipulability = w;
+                // // drawing points
+                // geometry_msgs::Vector3 scale = visual_tools->getScale(rviz_visual_tools::SMALL);
+                // std_msgs::ColorRGBA color = visual_tools->getColorScale(w*10);
+                // visual_tools->publishSphere(visual_tools->convertPose(eef_pose), color, scale, "Sphere");
+                // // visual_tools->publishArrow(visual_tools->convertPose(eef_pose),visual_tools->convertPose(eef_final), color, scale);
+                // visual_tools->publishAxis(visual_tools->convertPose(eef_pose), rviz_visual_tools::XXXXSMALL);
+                
+                // visual_tools->trigger();
+
+                // robot_state_pub.publish(manipulability);
+                
+                // }else
+                // {
+                // cout << "No found left IK\n";
+                // }
+
+              }
+
+            // }
         }
     
    
     }
   
-    
+  // Close the file
+    myFile.close();
 
   // ros::spin();
   ros::shutdown();  

@@ -4,11 +4,9 @@ Panels:
     Name: Displays
     Property Tree Widget:
       Expanded:
-        - /MotionPlanning1
-        - /TF1
         - /TF1/Frames1
       Splitter Ratio: 0.7425600290298462
-    Tree Height: 193
+    Tree Height: 203
   - Class: rviz/Help
     Name: Help
   - Class: rviz/Views
@@ -496,73 +494,13 @@ Visualization Manager:
       Frame Timeout: 15
       Frames:
         All Enabled: false
-        Head_Pitch:
-          Value: false
-        Head_Yaw:
-          Value: false
-        LElbow_Pitch:
-          Value: false
-        LElbow_Yaw:
-          Value: false
-        LFinger_1:
-          Value: false
-        LFinger_1_2:
-          Value: false
-        LFinger_2:
-          Value: false
-        LFinger_2_2:
-          Value: false
-        LFinger_3:
-          Value: false
-        LFinger_3_2:
-          Value: false
         LHand_base:
-          Value: false
-        LShoulder_Pitch:
-          Value: false
-        LShoulder_Roll:
-          Value: false
-        LWrist_Pitch:
           Value: false
         Lwrist_link:
           Value: false
-        Omni_wheel_1:
-          Value: false
-        Omni_wheel_2:
-          Value: false
-        Omni_wheel_3:
-          Value: false
-        Omni_wheel_4:
-          Value: false
-        RElbow_Pitch:
-          Value: false
-        RElbow_Yaw:
-          Value: false
-        RFinger_1:
-          Value: false
-        RFinger_1_2:
-          Value: false
-        RFinger_2:
-          Value: false
-        RFinger_2_2:
-          Value: false
-        RFinger_3:
-          Value: false
-        RFinger_3_2:
-          Value: false
         RHand_base:
           Value: false
-        RShoulder_Pitch:
-          Value: false
-        RShoulder_Roll:
-          Value: false
-        RWrist_Pitch:
-          Value: false
         Rwrist_link:
-          Value: false
-        Waist_Pitch:
-          Value: false
-        Waist_Roll:
           Value: false
         base_footprint:
           Value: false
@@ -580,55 +518,7 @@ Visualization Manager:
       Tree:
         base_footprint:
           base_link:
-            Omni_wheel_1:
-              {}
-            Omni_wheel_2:
-              {}
-            Omni_wheel_3:
-              {}
-            Omni_wheel_4:
-              {}
-            Waist_Roll:
-              Waist_Pitch:
-                Head_Yaw:
-                  Head_Pitch:
-                    {}
-                LShoulder_Pitch:
-                  LShoulder_Roll:
-                    LElbow_Pitch:
-                      LElbow_Yaw:
-                        LWrist_Pitch:
-                          Lwrist_link:
-                            LHand_base:
-                              LFinger_1:
-                                LFinger_1_2:
-                                  {}
-                              LFinger_2:
-                                LFinger_2_2:
-                                  {}
-                              LFinger_3:
-                                LFinger_3_2:
-                                  {}
-                            left_end_effect_point:
-                              {}
-                RShoulder_Pitch:
-                  RShoulder_Roll:
-                    RElbow_Pitch:
-                      RElbow_Yaw:
-                        RWrist_Pitch:
-                          Rwrist_link:
-                            RHand_base:
-                              RFinger_1:
-                                RFinger_1_2:
-                                  {}
-                              RFinger_2:
-                                RFinger_2_2:
-                                  {}
-                              RFinger_3:
-                                RFinger_3_2:
-                                  {}
-                            right_end_effect_point:
-                              {}
+            {}
       Update Interval: 0
       Value: true
     - Class: rviz/MarkerArray
@@ -636,8 +526,7 @@ Visualization Manager:
       Marker Topic: visualization_marker_array
       Name: MarkerArray
       Namespaces:
-        Axis: true
-        Sphere: true
+        {}
       Queue Size: 100
       Value: true
   Enabled: true
@@ -671,7 +560,7 @@ Visualization Manager:
       Invert Z Axis: false
       Name: Current View
       Near Clip Distance: 0.009999999776482582
-      Pitch: 0.6202032566070557
+      Pitch: 0.6252032518386841
       Target Frame: base_footprint
       Value: XYOrbit (rviz)
       Yaw: 5.754882335662842
@@ -679,7 +568,7 @@ Visualization Manager:
 Window Geometry:
   Displays:
     collapsed: false
-  Height: 1025
+  Height: 1052
   Help:
     collapsed: false
   Hide Left Dock: false
@@ -688,9 +577,9 @@ Window Geometry:
     collapsed: false
   MotionPlanning - Trajectory Slider:
     collapsed: false
-  QMainWindow State: 000000ff00000000fd0000000100000000000002a2000003a7fc0200000007fb000000100044006900730070006c006100790073010000003d00000152000000c900fffffffb0000000800480065006c00700000000342000000bb0000006e00fffffffb0000000a0056006900650077007300000003b0000000b0000000a400fffffffb0000000c00430061006d00650072006100000002ff000001610000000000000000fb0000001e004d006f00740069006f006e00200050006c0061006e006e0069006e00670100000374000001890000000000000000fb00000044004d006f00740069006f006e0050006c0061006e006e0069006e00670020002d0020005400720061006a006500630074006f0072007900200053006c00690064006500720000000000ffffffff0000004100fffffffb0000001c004d006f00740069006f006e0050006c0061006e006e0069006e006701000001950000024f0000019b00ffffff00000495000003a700000001000000020000000100000002fc0000000100000002000000010000000a0054006f006f006c00730100000000ffffffff0000000000000000
+  QMainWindow State: 000000ff00000000fd0000000100000000000002a2000003c2fc0200000007fb000000100044006900730070006c006100790073010000003d0000015c000000c900fffffffb0000000800480065006c00700000000342000000bb0000006e00fffffffb0000000a0056006900650077007300000003b0000000b0000000a400fffffffb0000000c00430061006d00650072006100000002ff000001610000000000000000fb0000001e004d006f00740069006f006e00200050006c0061006e006e0069006e00670100000374000001890000000000000000fb00000044004d006f00740069006f006e0050006c0061006e006e0069006e00670020002d0020005400720061006a006500630074006f0072007900200053006c00690064006500720000000000ffffffff0000004100fffffffb0000001c004d006f00740069006f006e0050006c0061006e006e0069006e0067010000019f000002600000019400ffffff000004d8000003c200000001000000020000000100000002fc0000000100000002000000010000000a0054006f006f006c00730100000000ffffffff0000000000000000
   Views:
     collapsed: false
-  Width: 1853
-  X: 67
-  Y: 27
+  Width: 1920
+  X: 972
+  Y: 0
