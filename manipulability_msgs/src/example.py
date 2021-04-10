@@ -10,9 +10,6 @@ class VisionSystemManager:
         self.manipulability_msg.header.stamp = rospy.Time.now()
         self.manipulability_msg.header.frame_id = 'manipulability'
 
-
-
-
         self.manipulability_msg.pose.position.x = 1.0 + random.uniform(0, 0.25)
         self.manipulability_msg.pose.position.y = 1.0 + random.uniform(0, 0.5)
         self.manipulability_msg.pose.position.z = 1.0 + random.uniform(0, 0.3)
