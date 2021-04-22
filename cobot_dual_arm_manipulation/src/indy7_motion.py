@@ -52,24 +52,20 @@ def InitializeMoveitCommander():
 	group_left_arm.set_goal_orientation_tolerance(0.001)
 	group_left_arm.set_planning_time(5.0)
 
-	# group_right_arm = MoveGroupCommander("irb120")
-	# group_right_arm.set_goal_position_tolerance(0.001)
-	# group_right_arm.set_goal_orientation_tolerance(0.001)
-	# group_right_arm.set_planning_time(5.0)
-
 	#We create this DisplayTrajectory publisher which is used below to publish trajectories for RVIZ to visualize.
 	# display_trajectory_publisher = rospy.Publisher('/move_group/display_planned_path', moveit_msgs.msg.DisplayTrajectory)
 
 	# Obtain current poses of left and right end-effectors: [x,y,z,roll,pitch,yaw].T
-	# P_left_pose = group_left_arm.get_current_pose()
+	P_left_pose = group_left_arm.get_current_pose()
 	# P_right_pose = group_right_arm.get_current_pose()
-	# P_left_euler = group_left_arm.get_current_rpy()
+	P_left_euler = group_left_arm.get_current_rpy()
 	# P_right_euler = group_right_arm.get_current_rpy()
 
-	# global P_left_current, P_right_current
-	# P_left_current = np.array([[P_left_pose.pose.position.x],[P_left_pose.pose.position.y],[P_left_pose.pose.position.z],[P_left_euler[0]],[P_left_euler[1]],[P_left_euler[2]]])
-	# P_right_current = np.array([[P_right_pose.pose.position.x],[P_right_pose.pose.position.y],[P_right_pose.pose.position.z],[P_right_euler[0]],[P_right_euler[1]],[P_right_euler[1]]])
-
+	global P_left_current, P_right_current
+	P_left_current = np.array([[P_left_pose.pose.position.x],[P_left_pose.pose.position.y],[P_left_pose.pose.position.z],[P_left_euler[0]],[P_left_euler[1]],[P_left_euler[2]]])
+	
+	print(P_left_current)
+	
 	#P_left_current = np.array([[0.18],[0.64],[-0.16],[-0.5],[0.8],[0.005]])
 	#P_right_current = np.array([[0.56],[-0.66],[0.51],[-0.31],[0.83],[-0.29]])
 	
