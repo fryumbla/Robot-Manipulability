@@ -81,8 +81,9 @@ def InitializeMoveitCommander():
 
 	# global P_left_current, P_right_current
 	# P_left_current = np.array([[P_left_pose.pose.position.x],[P_left_pose.pose.position.y],[P_left_pose.pose.position.z],[P_left_euler[0]],[P_left_euler[1]],[P_left_euler[2]]])
-	P_right_current = np.array([[P_right_pose.pose.position.x],[P_right_pose.pose.position.y],[P_right_pose.pose.position.z],[P_right_euler[0]],[P_right_euler[1]],[P_right_euler[1]]])
+	P_right_current = np.array([[P_right_pose.pose.position.x],[P_right_pose.pose.position.y],[P_right_pose.pose.position.z],[P_right_euler[0]],[P_right_euler[1]],[P_right_euler[2]]])
 	print P_right_current
+	print group_right_arm.get_current_joint_values()
 	#P_left_current = np.array([[0.18],[0.64],[-0.16],[-0.5],[0.8],[0.005]])
 	#P_right_current = np.array([[0.56],[-0.66],[0.51],[-0.31],[0.83],[-0.29]])
 	
@@ -104,14 +105,17 @@ def main():
 	#0degree
 	jointindy.append([ 0.41858622, -1.26679042, -1.87965003,  0.41952195,  1.57492068,       -1.56783586])
 	jointabb.append([-7.78692595e-02,  3.23792760e-01,  6.13496452e-01, -1.70074212e-04,        6.34084127e-01, -7.68190648e-02])
+	# jointabb.append([-0.07487089186906815, 0.28924036026000977, 0.6051457524299622, -0.0013743967283517122, 0.6760438680648804, -0.07342521101236343])
 
-	#15 degree
-	jointindy.append([-0.12341469, -1.26035867, -1.92332673, -0.38586257,  1.61064675,       -1.58584233])
-	jointabb.append([ 1.58646141e-01,  2.09805506e-01,  7.62483479e-01, -6.99153463e-04,        5.99098122e-01, -1.02028742e-01])
+	# #15 degree
+	# jointindy.append([-0.12341469, -1.26035867, -1.92332673, -0.38586257,  1.61064675,       -1.58584233])
+	# jointabb.append([ 1.58646141e-01,  2.09805506e-01,  7.62483479e-01, -6.99153463e-04,        5.99098122e-01, -1.02028742e-01])
+	# # jointabb.append([0.15988759696483612, 0.16888228058815002, 0.7528910040855408, 0.0010128606809303164, 0.6491090059280396, -0.10272233933210373])
 
 	#30 degree
 	jointindy.append([ 2.47033419,  1.20919852,  1.16771554, -1.29225056, -1.31398898,        2.29881508])
 	jointabb.append([-0.09084018,  0.41080732,  0.49139491,  0.00196822,  0.66833665,       -0.61658216])
+	# jointabb.append([-0.09036283195018768, 0.428239107131958, 0.4973275363445282, 0.00029955970239825547, 0.6447646617889404, -0.6136510372161865])
 
 	#45 degree
 	jointindy.append([-0.47250318, -1.03370062, -1.13052939,  1.74924782, -1.31226467,        2.52448444])
@@ -121,9 +125,9 @@ def main():
 	jointindy.append([-0.47797381, -1.2127865 , -1.79595662, -1.52485076,  1.56445979,       -1.43894336])
 	jointabb.append([-4.46826491e-01,  8.36775282e-01, -3.58490688e-01, -4.29344900e-04,        1.09255857e+00, -1.49295508e+00])
 
-	#75 degree
-	jointindy.append([ 2.72480954,  1.47395626,  0.32942789, -1.60618728, -1.7207225 ,        2.90596006])
-	jointabb.append([-5.13370941e-01,  1.17268930e+00, -7.80538866e-01,  3.11292102e-04,        1.17951969e+00, -1.82192567e+00])
+	# #75 degree
+	# jointindy.append([ 2.72480954,  1.47395626,  0.32942789, -1.60618728, -1.7207225 ,        2.90596006])
+	# jointabb.append([-5.13370941e-01,  1.17268930e+00, -7.80538866e-01,  3.11292102e-04,        1.17951969e+00, -1.82192567e+00])
 
 	# #-45 degree
 	# jointindy[p]=[-2.57966512,  1.07278605,  1.01015574, -1.6819083 ,  1.37697027,        3.66511447]
@@ -147,13 +151,32 @@ def main():
 			# plan_right = group_right_arm.plan()
 			group_right_arm.execute(plan_right)
 
-		if (number>=1):		
+		if (number>=1 and number<=9):		
 			home_joints_position = {'joint_1': jointabb[number-1][0], 'joint_2': jointabb[number-1][1], 'joint_3': jointabb[number-1][2], 'joint_4': jointabb[number-1][3], 'joint_5': jointabb[number-1][4], 'joint_6': jointabb[number-1][5]}
 			group_right_arm.set_joint_value_target(home_joints_position)
 			plan_right = group_right_arm.plan()
 			group_right_arm.execute(plan_right)
 
+		#aproximamos al connector 
+		if (number==10):
+			mating_pose = group_right_arm.get_current_pose().pose.position
+			mating_euler = group_right_arm.get_current_rpy()
+			group_right_arm.set_pose_target([mating_pose.x-0.042,mating_pose.y,mating_pose.z,mating_euler[0],mating_euler[1],mating_euler[2]],end_effector_link="end_eff_point_vibrationgripper")
+			plan_right = group_right_arm.plan()
+			group_right_arm.execute(plan_right)
 
+		#mating y despues debemos regresar al punto inicial
+		if (number==11):
+			mating_pose = group_right_arm.get_current_pose().pose.position
+			mating_euler = group_right_arm.get_current_rpy()
+			group_right_arm.set_pose_target([mating_pose.x-0.012,mating_pose.y,mating_pose.z,mating_euler[0],mating_euler[1],mating_euler[2]],end_effector_link="end_eff_point_vibrationgripper")
+			plan_right = group_right_arm.plan()
+			group_right_arm.execute(plan_right)
+
+		if (number==12):
+			group_right_arm.set_pose_target([0.2,0.1,0.2,-3.14086984,0,7.85801273e-01],end_effector_link="end_eff_point_vibrationgripper")
+			plan_right = group_right_arm.plan()
+			group_right_arm.execute(plan_right)
 
 	# #abb
 	# home_joints_position = {'joint_1': jointabb[p][0], 'joint_2': jointabb[p][1], 'joint_3': jointabb[p][2], 'joint_4': jointabb[p][3], 'joint_5': jointabb[p][4], 'joint_6': jointabb[p][5]}
