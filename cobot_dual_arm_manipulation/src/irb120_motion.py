@@ -44,12 +44,11 @@ def InitializeMoveitCommander():
 	# moveit_commander.roscpp_initialize(joint_state_topic)
 
 	#Instantiate a RobotCommander object. This object is an interface to the robot as a whole.
-	robot1 = moveit_commander.RobotCommander()
-	# robot2 = moveit_commander.RobotCommander(robot_description="/indy7/robot_description")
+	robot = moveit_commander.RobotCommander()
 
 	# We can get a list of all the groups in the robot:
-	print("============ Available Planning Groups:", robot1.get_group_names())
-	# print("============ Available Planning Groups:", robot2.get_group_names())	
+	print("============ Available Planning Groups:", robot.get_group_names())
+
 	# Sometimes for debugging it is useful to print the entire state of the
 	# robot:
 	print("============ Printing robot state")
@@ -65,15 +64,6 @@ def InitializeMoveitCommander():
 
 	#Instantiate a MoveGroupCommander object. This object is an interface to one group of joints. In this case the group is the joints in the left arm. This interface can be used to plan and execute motions on the left arm.
 	global group_both_arms, group_left_arm, group_right_arm
-	group_both_arms = MoveGroupCommander("dual_arm")
-	group_both_arms.set_goal_position_tolerance(0.001)
-	group_both_arms.set_goal_orientation_tolerance(0.001)
-	group_both_arms.set_planning_time(5.0)
-
-	group_left_arm = MoveGroupCommander("indy7")
-	group_left_arm.set_goal_position_tolerance(0.001)
-	group_left_arm.set_goal_orientation_tolerance(0.001)
-	group_left_arm.set_planning_time(5.0)
 
 	group_right_arm = MoveGroupCommander("irb120")
 	group_right_arm.set_goal_position_tolerance(0.001)
@@ -85,14 +75,14 @@ def InitializeMoveitCommander():
 
 	# Obtain current poses of left and right end-effectors: [x,y,z,roll,pitch,yaw].T
 	# P_left_pose = group_left_arm.get_current_pose()
-	# P_right_pose = group_right_arm.get_current_pose()
+	P_right_pose = group_right_arm.get_current_pose()
 	# P_left_euler = group_left_arm.get_current_rpy()
-	# P_right_euler = group_right_arm.get_current_rpy()
+	P_right_euler = group_right_arm.get_current_rpy()
 
 	# global P_left_current, P_right_current
 	# P_left_current = np.array([[P_left_pose.pose.position.x],[P_left_pose.pose.position.y],[P_left_pose.pose.position.z],[P_left_euler[0]],[P_left_euler[1]],[P_left_euler[2]]])
-	# P_right_current = np.array([[P_right_pose.pose.position.x],[P_right_pose.pose.position.y],[P_right_pose.pose.position.z],[P_right_euler[0]],[P_right_euler[1]],[P_right_euler[1]]])
-
+	P_right_current = np.array([[P_right_pose.pose.position.x],[P_right_pose.pose.position.y],[P_right_pose.pose.position.z],[P_right_euler[0]],[P_right_euler[1]],[P_right_euler[1]]])
+	print P_right_current
 	#P_left_current = np.array([[0.18],[0.64],[-0.16],[-0.5],[0.8],[0.005]])
 	#P_right_current = np.array([[0.56],[-0.66],[0.51],[-0.31],[0.83],[-0.29]])
 	
@@ -143,41 +133,26 @@ def main():
 	jointindy.append([-0.09267645, -1.14888819, -1.98294319, -2.70997071, -1.56212006,        1.56572452])
 	jointabb.append([4.67854646e-01, 1.58698817e-01, 6.21157867e-01, 8.77708766e-04,       7.90790089e-01, 9.91396194e-01])
 
+	
 	while not rospy.is_shutdown():
 
 		number = input ("Enter number: ")
 
 		if (number==0):
-			group_right_arm.set_pose_target([0.349713119182,-0.0249854954002,0.0533491845196,math.pi,0,0],end_effector_link="end_eff_point_vibrationgripper")
-			group_left_arm.set_pose_target([-0.299935650695,-0.174063883192,0.30705390301,0,math.pi,math.pi/2],end_effector_link="end_eff_point_2f")
+			group_right_arm.set_pose_target([0.34,-2.49813353e-02,5.33612867e-02,math.pi,0,0],end_effector_link="end_eff_point_vibrationgripper")
 			plan_right = group_right_arm.plan()
-			plan_left = group_left_arm.plan()
 			group_right_arm.execute(plan_right)
-			group_left_arm.execute(plan_left)
+			# home_joints_position = {'joint0': 0, 'joint1': 0, 'joint2': -3.1416/2, 'joint3': 0, 'joint4': -3.1416/2, 'joint5': -3.1416/2}
+			# group_right_arm.set_joint_value_target(home_joints_position)
+			# plan_right = group_right_arm.plan()
+			group_right_arm.execute(plan_right)
 
+		if (number>=1):		
+			home_joints_position = {'joint_1': jointabb[number-1][0], 'joint_2': jointabb[number-1][1], 'joint_3': jointabb[number-1][2], 'joint_4': jointabb[number-1][3], 'joint_5': jointabb[number-1][4], 'joint_6': jointabb[number-1][5]}
+			group_right_arm.set_joint_value_target(home_joints_position)
+			plan_right = group_right_arm.plan()
+			group_right_arm.execute(plan_right)
 
-		if (number>=1):	
-			home_joints_position = {'joint0': jointindy[number-1][0], 'joint1': jointindy[number-1][1], 'joint2': jointindy[number-1][2], 'joint3': jointindy[number-1][3], 'joint4': jointindy[number-1][4], 'joint5': jointindy[number-1][5], 
-									'joint_1': jointabb[number-1][0], 'joint_2': jointabb[number-1][1], 'joint_3': jointabb[number-1][2], 'joint_4': jointabb[number-1][3], 'joint_5': jointabb[number-1][4], 'joint_6': jointabb[number-1][5]}
-			group_both_arms.set_joint_value_target(home_joints_position)
-			plan_both = group_both_arms.plan()
-			group_both_arms.execute(plan_both)
-
-
-	# for p in xrange(0,len(jointindy)):
-	# 	print("Position %d"%p)
-
-
-
-
-	# rospy.sleep(5)
-	# group_right_arm.set_pose_target([0.349713119182,-0.0249854954002,0.0533491845196,math.pi,0,0],end_effector_link="end_eff_point_vibrationgripper")
-	# group_left_arm.set_pose_target([-0.299935650695,-0.174063883192,0.30705390301,0,math.pi,math.pi/2],end_effector_link="end_eff_point_2f")
-	# plan_right = group_right_arm.plan()
-	# plan_left = group_left_arm.plan()
-	# group_right_arm.execute(plan_right)
-	# group_left_arm.execute(plan_left)
-	# rospy.sleep(5)
 
 
 	# #abb
@@ -193,60 +168,6 @@ def main():
 	# plan_both = group_left_arm.plan()
 	# group_left_arm																						.execute(plan_both)
 	# rospy.sleep(5)	
-
-	# dual grasping 0 0 degree
-	
-	# group_right_arm.set_pose_target([0.35,0.0,0.2,math.pi,0,0],end_effector_link="end_eff_point_vibrationgripper")
-	# # group_left_arm.set_pose_target([0.16,-0.11,0.19,3.09387838,0.04260803,0.02662061],end_effector_link="end_eff_point_vibrationgripper")
-	# plan_right = group_right_arm.plan()
-	# # plan_left = group_left_arm.plan()
-	# group_right_arm.execute(plan_right)
-	# # group_left_arm.execute(plan_left)
-	# rospy.sleep(5)
-
-	# #calibrate both arms home position
-	# home_joints_position = {'joint0': 0, 'joint1': 0, 'joint2': 0, 'joint3': 0, 'joint4': 0, 'joint5': 0, 'joint_1': 0, 'joint_2': 0, 'joint_3': 0, 'joint_4': 0, 'joint_5': 0, 'joint_6': 0}
-	# group_both_arms.set_joint_value_target(home_joints_position)
-	# plan_both = group_both_arms.plan()
-	# group_both_arms.execute(plan_both)
-	# rospy.sleep(5)
-
-	# group_right_arm.set_pose_target([0,0,0.3,math.pi/2,0,math.pi/2],end_effector_link="end_eff_point_2f")
-	# group_left_arm.set_pose_target([0.15,-0.02,0.2,-math.pi,0,0],end_effector_link="end_eff_point_vibrationgripper")
-	# plan_right = group_right_arm.plan()
-	# plan_left = group_left_arm.plan()
-	# group_right_arm.execute(plan_right)
-	# group_left_arm.execute(plan_left)
-	# rospy.sleep(5)
-
-	# # dual grasping 30 30 degree
-	# group_right_arm.set_pose_target([0.4,0,1.0,0,-math.pi/2,2*math.pi/3],end_effector_link="end_eff_point_2f")
-	# plan_right = group_right_arm.plan()
-	# group_left_arm.set_pose_target([0.4,0,0.9,0,-math.pi/2,-2*math.pi/3],end_effector_link="end_eff_point_vibrationgripper")
-	# plan_left = group_left_arm.plan()
-	# group_right_arm.execute(plan_right)
-	# group_left_arm.execute(plan_left)
-	# rospy.sleep(5)
-
-	# #calibrate both arms home position
-	# home_joints_position = {'joint0': 0, 'joint1': 0, 'joint2': 0, 'joint3': 0, 'joint4': 0, 'joint5': 0, 'joint_1': 0, 'joint_2': 0, 'joint_3': 0, 'joint_4': 0, 'joint_5': 0, 'joint_6': 0}
-	# group_both_arms.set_joint_value_target(home_joints_position)
-	# plan_both = group_both_arms.plan()
-	# group_both_arms.execute(plan_both)
-	# rospy.sleep(5)
-
-	# # dual pusshing
-	# # group_right_arm.set_pose_target([0.25,0.2,0.9,0,-math.pi/2,3*math.pi/4],end_effector_link="right_end_effect_point")
-	# # plan_right = group_right_arm.plan()
-	# # group_left_arm.set_pose_target([0.25,-0.2,0.9,0,-math.pi/2,math.pi],end_effector_link="left_end_effect_point")
-	# # plan_left = group_left_arm.plan()
-	# # group_right_arm.execute(plan_right)
-	# # group_left_arm.execute(plan_left)
-	# # rospy.sleep(5)
-
-
-    
-
 
 
 
