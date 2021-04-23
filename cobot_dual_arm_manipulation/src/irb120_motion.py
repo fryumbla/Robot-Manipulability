@@ -116,15 +116,17 @@ def main():
 
 	#45 degree
 	jointindy.append([-0.5358581 , -1.15466513, -1.01414956,  1.71242838, -1.36575865,        2.52852364])
-	jointabb.append([-3.88253294e-01,  4.56915362e-01,  1.85277813e-01,  8.19518533e-04,        9.29294445e-01, -1.17451908e+00])
+	# jointabb.append([-3.88253294e-01,  4.56915362e-01,  1.85277813e-01,  8.19518533e-04,        9.29294445e-01, -1.17451908e+00])
+	jointabb.append([-0.3901221454143524, 0.47066840529441833, 0.2010243684053421, 0.0014136130921542645, 0.8985274434089661, -1.177268147468567])
 
 	#60 degree
 	jointindy.append([-0.46207666, -1.18946499, -0.69725908,  1.59105471, -1.51190398,        2.82531346])
-	jointabb.append([-4.94380741e-01,  5.95052149e-01, -1.85281435e-01, -8.44017968e-05,        1.16007364e+00, -1.54235530e+00])
+	# jointabb.append([-4.94380741e-01,  5.95052149e-01, -1.85281435e-01, -8.44017968e-05,        1.16007364e+00, -1.54235530e+00])
+	jointabb.append([-0.49402716755867004, 0.5967938899993896, -0.1688491255044937, -0.0006610956625081599, 1.1411652565002441, -1.5419644117355347])
 
 	#75 degree
-	jointindy.append([ 2.62394199,  2.1569631 , -1.15040169, -1.43246986, -1.78557209,       -2.56215665])
-	jointabb.append([-4.31454170e-01,  1.02330574e+00, -5.57752243e-01,  1.21944577e-04,        1.10624058e+00, -1.74020412e+00])
+	# jointindy.append([ 2.62394199,  2.1569631 , -1.15040169, -1.43246986, -1.78557209,       -2.56215665])
+	# jointabb.append([-4.31454170e-01,  1.02330574e+00, -5.57752243e-01,  1.21944577e-04,        1.10624058e+00, -1.74020412e+00])
 
 	# #-45 degree
 	# jointindy[p]=[-2.57966512,  1.07278605,  1.01015574, -1.6819083 ,  1.37697027,        3.66511447]
@@ -158,7 +160,7 @@ def main():
 		if (number==10):
 			mating_pose = group_right_arm.get_current_pose().pose.position
 			mating_euler = group_right_arm.get_current_rpy()
-			group_right_arm.set_pose_target([mating_pose.x-0.042,mating_pose.y,mating_pose.z,mating_euler[0],mating_euler[1],mating_euler[2]],end_effector_link="end_eff_point_vibrationgripper")
+			group_right_arm.set_pose_target([mating_pose.x,mating_pose.y,mating_pose.z-0.005,mating_euler[0],mating_euler[1],mating_euler[2]],end_effector_link="end_eff_point_vibrationgripper")
 			plan_right = group_right_arm.plan()
 			group_right_arm.execute(plan_right)
 
