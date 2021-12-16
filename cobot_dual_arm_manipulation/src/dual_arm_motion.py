@@ -149,7 +149,9 @@ def main():
 
 		if (number==0):
 			group_right_arm.set_pose_target([0.349713119182,-0.0249854954002,0.0533491845196,math.pi,0,0],end_effector_link="end_eff_point_vibrationgripper")
-			group_left_arm.set_pose_target([-0.299935650695,-0.174063883192,0.30705390301,0,math.pi,math.pi/2],end_effector_link="end_eff_point_2f")
+			# group_left_arm.set_pose_target([-0.299935650695,-0.174063883192,0.30705390301,0,math.pi,math.pi/2],end_effector_link="end_eff_point_2f")
+			home_joints_position = {'joint0': 0, 'joint1': 0, 'joint2': -3.1416/2, 'joint3': 0, 'joint4': -3.1416/2, 'joint5': -3.1416/2}
+			group_left_arm.set_joint_value_target(home_joints_position)
 			plan_right = group_right_arm.plan()
 			plan_left = group_left_arm.plan()
 			group_right_arm.execute(plan_right)
